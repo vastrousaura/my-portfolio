@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vansh Ahuja - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a192f;
+            color: #ccd6f6;
+        }
+        .ocean-blue { color: #64ffda; }
+        .ocean-blue-bg { background-color: #64ffda; }
+        .ocean-blue-border { border-color: #64ffda; }
+        .light-slate { color: #8892b0; }
+        .slate { color: #a8b2d1; }
+        .dark-navy { background-color: #0a192f; }
+        .navy-bg { background-color: #112240; }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a192f; }
+        ::-webkit-scrollbar-thumb { background: #8892b0; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64ffda; }
+
+        /* Marquee animation */
+        .marquee {
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 30s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Slide-in menu */
+        .slide-menu {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Achievement animation */
+        .achievement-item {
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        .achievement-item:hover {
+            transform: translateX(10px);
+            background-color: #112240;
+        }
+        .achievement-item .fa-trophy {
+            transition: color 0.3s ease;
+        }
+        .achievement-item:hover .fa-trophy {
+            color: #64ffda;
+        }
+
+        /* Toggle switch styling */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 150px;
+            height: 34px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #112240;
+            transition: .4s;
+            border-radius: 34px;
+            border: 1px solid #8892b0;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 70px;
+            left: 4px;
+            bottom: 3px;
+            background-color: #64ffda;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        input:checked + .slider:before {
+            transform: translateX(70px);
+        }
+        .slider-text {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: #ccd6f6;
+            z-index: 1;
+        }
+        .slider-text span:first-child {
+            padding-left: 5px;
+        }
+        .slider-text span:last-child {
+            padding-right: 5px;
+        }
+        .active-mode {
+            color: #0a192f;
+        }
+
+        /* Designer Mode Canvas */
+        #designer-canvas-container {
+            position: fixed;
+            top: 80px; /* Below header */
+            left: 0;
+            width: 100%;
+            height: calc(100vh - 80px);
+            z-index: 40; /* Below header */
+            cursor: grab;
+        }
+        
+    </style>
+</head>
+<body class="dark-navy">
+
+    <!-- Header -->
+    <header id="header" class="sticky top-0 z-50 navy-bg shadow-lg backdrop-blur-sm bg-opacity-80">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo/Name -->
+                <div class="text-2xl font-bold ocean-blue tracking-wider">
+                    <a href="#">VA</a>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#about" class="slate hover:ocean-blue transition duration-300">About Me</a>
+                    <a href="#education" class="slate hover:ocean-blue transition duration-300">Education</a>
+                    <a href="#skills" class="slate hover:ocean-blue transition duration-300">Skills</a>
+                    <a href="#achievements" class="slate hover:ocean-blue transition duration-300">Achievements</a>
+                    <a href="#contact" class="slate hover:ocean-blue transition duration-300">Contact Me</a>
+                </nav>
+
+                <!-- Search and Mode Toggle -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Search..." class="bg-[#112240] border border-slate rounded-full py-1 px-4 focus:outline-none focus:border-ocean-blue transition duration-300 w-40">
+                        <i class="fa fa-search absolute right-3 top-1/2 transform -translate-y-1/2 light-slate"></i>
+                    </div>
+                     <label class="switch">
+                        <input type="checkbox" id="mode-toggle">
+                        <span class="slider"></span>
+                        <div class="slider-text">
+                            <span id="dev-text" class="active-mode">Developer</span>
+                            <span id="design-text">Designer</span>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                     <button id="mobile-menu-button" class="text-2xl text-slate focus:outline-none">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Mobile Slide-out Menu -->
+    <div id="mobile-menu" class="fixed top-0 right-0 h-full w-64 navy-bg shadow-xl z-50 transform translate-x-full slide-menu md:hidden">
+        <div class="p-4">
+            <button id="close-menu-button" class="text-2xl text-slate float-right mb-4">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="clear-both"></div>
+            <nav class="flex flex-col space-y-6 mt-8 text-center">
+                <a href="#about" class="mobile-nav-link text-lg slate hover:ocean-blue transition duration-300">About Me</a>
+                <a href="#education" class="mobile-nav-link text-lg slate hover:ocean-blue transition duration-300">Education</a>
+                <a href="#skills" class="mobile-nav-link text-lg slate hover:ocean-blue transition duration-300">Skills</a>
+                <a href="#achievements" class="mobile-nav-link text-lg slate hover:ocean-blue transition duration-300">Achievements</a>
+                <a href="#contact" class="mobile-nav-link text-lg slate hover:ocean-blue transition duration-300">Contact Me</a>
+                 <div class="mt-8">
+                     <label class="switch mx-auto">
+                        <input type="checkbox" id="mobile-mode-toggle">
+                        <span class="slider"></span>
+                        <div class="slider-text">
+                            <span id="mobile-dev-text" class="active-mode">Developer</span>
+                            <span id="mobile-design-text">Designer</span>
+                        </div>
+                    </label>
+                 </div>
+            </nav>
+        </div>
+    </div>
+    
+    <div id="developer-content">
+        <!-- Hero Section -->
+        <section id="hero" class="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center min-h-[calc(100vh-80px)]">
+            <p class="text-lg ocean-blue font-mono mb-4">Hi, my name is</p>
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-bold text-slate tracking-tight">Vansh Ahuja.</h1>
+            <h2 class="text-3xl sm:text-5xl lg:text-6xl font-bold light-slate mt-2">I build innovative solutions for the modern web.</h2>
+            <p class="mt-6 max-w-2xl text-lg light-slate">I'm an engineering student specializing in web development, machine learning, and IoT. I create efficient, user-focused digital experiences from concept to deployment.</p>
+            <div class="mt-8">
+                <a href="#skills" class="text-ocean-blue border border-ocean-blue rounded-md py-3 px-8 hover:bg-ocean-blue/10 transition duration-300 font-mono">
+                    See My Work
+                </a>
+            </div>
+        </section>
+
+        <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <!-- Image Marquee -->
+            <section class="w-full marquee my-12 overflow-hidden">
+                <div class="marquee-content">
+                    <!-- Use a set of images twice for a seamless loop -->
+                    <img src="assets/intro/1.jpg" alt="Vansh Ahuja" class="inline-block h-48 sm:h-64 rounded-lg mx-4 shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/400x300/0a192f/64ffda?text=Intro+1';">
+                    <img src="assets/intro/2.jpg" alt="Vansh Ahuja" class="inline-block h-48 sm:h-64 rounded-lg mx-4 shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/400x300/112240/64ffda?text=Intro+2';">
+                    <img src="assets/intro/3.jpg" alt="Vansh Ahuja" class="inline-block h-48 sm:h-64 rounded-lg mx-4 shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/400x300/0a192f/64ffda?text=Intro+3';">
+                    <img src="assets/intro/4.jpg" alt="Vansh Ahuja" class="inline-block h-48 sm:h-64 rounded-lg mx-4 shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/400x300/112240/64ffda?text=Intro+4';">
+                    <img src="assets/intro/5.jpg" alt="Vansh Ahuja" class="inline-block h-48 sm:h-64 rounded-lg mx-4 shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/400x300/0a192f/64ffda?text=Intro+5';">
+                    <img src="assets/intro/1.jpg" alt="Vansh Ahuja" class="inline-block h-48 sm:h-64 rounded-lg mx-4 shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/400x300/112240/64ffda?text=Intro+1';">
+                    <img src="assets/intro/2.jpg" alt="Vansh Ahuja" class="inline-block h-48 sm:h-64 rounded-lg mx-4 shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/400x300/0a192f/64ffda?text=Intro+2';">
+                    <img src="assets/intro/3.jpg" alt="Vansh Ahuja" class="inline-block h-48 sm:h-64 rounded-lg mx-4 shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/400x300/112240/64ffda?text=Intro+3';">
+                    <img src="assets/intro/4.jpg" alt="Vansh Ahuja" class="inline-block h-48 sm:h-64 rounded-lg mx-4 shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/400x300/0a192f/64ffda?text=Intro+4';">
+                    <img src="assets/intro/5.jpg" alt="Vansh Ahuja" class="inline-block h-48 sm:h-64 rounded-lg mx-4 shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/400x300/112240/64ffda?text=Intro+5';">
+                </div>
+            </section>
+
+            <!-- About Me -->
+            <section id="about" class="my-24 scroll-mt-20">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-2">
+                    <span class="ocean-blue font-mono text-2xl">01.</span> About Me
+                </h2>
+                <div class="w-24 h-1 ocean-blue-bg mb-8"></div>
+                <div class="max-w-4xl text-lg light-slate space-y-4">
+                    <p><span class="ocean-blue">Hi there! I'm Vansh Ahuja.</span> Think of me as a digital architect who thrives on clarity, structure, and solving meaningful problems.</p>
+                    <p>I approach challenges with a blend of persistence and curiosity, always aiming for the most efficient path to a great solution. In a team, I'm the one who takes initiative, listens intently to diverse perspectives, and ensures we're consistently moving toward tangible results.</p>
+                    <p>My core strengths lie in analytical thinking, adapting to new technologies, and maintaining a calm focus under pressure. While I have a low tolerance for inefficiency, it's this very trait that fuels my drive to refine ideas and deliver exceptional outcomes.</p>
+                </div>
+            </section>
+
+            <!-- Educational Qualification -->
+            <section id="education" class="my-24 scroll-mt-20">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-2">
+                    <span class="ocean-blue font-mono text-2xl">02.</span> My Journey
+                </h2>
+                <div class="w-24 h-1 ocean-blue-bg mb-8"></div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="navy-bg p-6 rounded-lg shadow-lg border border-transparent hover:border-ocean-blue transition-all duration-300">
+                        <h3 class="text-xl font-bold slate mb-2">B.Tech in Engineering</h3>
+                        <p class="ocean-blue">Panipat Institute of Engineering & Technology</p>
+                        <p class="light-slate text-sm">Currently Pursuing</p>
+                        <p class="mt-4 slate font-semibold">Role: AICTE IDEA Lab Ambassador</p>
+                    </div>
+                    <div class="navy-bg p-6 rounded-lg shadow-lg border border-transparent hover:border-ocean-blue transition-all duration-300">
+                        <h3 class="text-xl font-bold slate mb-2">Class XII (Senior Secondary)</h3>
+                        <p class="ocean-blue">76%</p>
+                        <p class="light-slate text-sm">Completed</p>
+                    </div>
+                    <div class="navy-bg p-6 rounded-lg shadow-lg border border-transparent hover:border-ocean-blue transition-all duration-300">
+                        <h3 class="text-xl font-bold slate mb-2">Class X (Secondary)</h3>
+                        <p class="ocean-blue">82%</p>
+                        <p class="light-slate text-sm">Completed</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Skills -->
+            <section id="skills" class="my-24 scroll-mt-20">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-2 text-center">
+                    <span class="ocean-blue font-mono text-2xl">03.</span> What I Build With
+                </h2>
+                <div class="w-24 h-1 ocean-blue-bg mb-8 mx-auto"></div>
+                 <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 text-center">
+                    <!-- Web Development -->
+                    <div class="navy-bg p-6 rounded-lg shadow-lg hover:shadow-ocean-blue/20 transition-shadow duration-300">
+                        <i class="fas fa-code text-4xl ocean-blue mb-4"></i>
+                        <h3 class="text-2xl font-bold slate mb-4">Web Development</h3>
+                        <ul class="space-y-2 light-slate">
+                            <li>Project 1: Portfolio Website</li>
+                            <li>Project 2: E-commerce Platform</li>
+                            <li>Project 3: Blogging Application</li>
+                        </ul>
+                    </div>
+                    <!-- Machine Learning -->
+                     <div class="navy-bg p-6 rounded-lg shadow-lg hover:shadow-ocean-blue/20 transition-shadow duration-300">
+                        <i class="fas fa-brain text-4xl ocean-blue mb-4"></i>
+                        <h3 class="text-2xl font-bold slate mb-4">Machine Learning</h3>
+                        <ul class="space-y-2 light-slate">
+                            <li>Project 1: Sentiment Analysis Model</li>
+                            <li>Project 2: Image Recognition App</li>
+                            <li>Project 3: Predictive Analytics Tool</li>
+                        </ul>
+                    </div>
+                    <!-- CAD -->
+                    <div class="navy-bg p-6 rounded-lg shadow-lg hover:shadow-ocean-blue/20 transition-shadow duration-300">
+                        <i class="fas fa-drafting-compass text-4xl ocean-blue mb-4"></i>
+                        <h3 class="text-2xl font-bold slate mb-4">CAD & 3D Modeling</h3>
+                        <ul class="space-y-2 light-slate">
+                            <li>CATIA Project 1</li>
+                            <li>Fusion 360 Project 2</li>
+                            <li>General CAD Design 3</li>
+                        </ul>
+                    </div>
+                     <!-- IoT -->
+                    <div class="navy-bg p-6 rounded-lg shadow-lg hover:shadow-ocean-blue/20 transition-shadow duration-300">
+                        <i class="fas fa-wifi text-4xl ocean-blue mb-4"></i>
+                        <h3 class="text-2xl font-bold slate mb-4">Internet of Things (IoT)</h3>
+                        <ul class="space-y-2 light-slate">
+                            <li>Project 1: Smart Home Automation</li>
+                            <li>Project 2: Weather Monitoring System</li>
+                            <li>Project 3: Wearable Health Tracker</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Achievements -->
+            <section id="achievements" class="my-24 scroll-mt-20">
+                 <h2 class="text-3xl sm:text-4xl font-bold mb-2">
+                    <span class="ocean-blue font-mono text-2xl">04.</span> Achievements & Accolades
+                </h2>
+                <div class="w-24 h-1 ocean-blue-bg mb-8"></div>
+                <div class="grid lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <ul class="space-y-4">
+                            <li class="p-4 rounded-md achievement-item">
+                                <i class="fas fa-trophy mr-3 ocean-blue"></i>
+                                <span class="slate font-semibold">SIH 2024 Winner</span>
+                            </li>
+                             <li class="p-4 rounded-md achievement-item">
+                                <i class="fas fa-trophy mr-3 light-slate"></i>
+                                <span class="slate font-semibold">COER Manthan 3.0 National Hackathon - 2nd Position</span>
+                            </li>
+                            <li class="p-4 rounded-md achievement-item">
+                                <i class="fas fa-trophy mr-3 ocean-blue"></i>
+                                <span class="slate font-semibold">IILM Ideathon '25 - 1st Position</span>
+                            </li>
+                            <li class="p-4 rounded-md achievement-item">
+                                <i class="fas fa-trophy mr-3 ocean-blue"></i>
+                                <span class="slate font-semibold">IILM Hackathon '25 - 1st Position</span>
+                            </li>
+                            <li class="p-4 rounded-md achievement-item">
+                               <i class="fas fa-trophy mr-3 ocean-blue"></i>
+                                <span class="slate font-semibold">Zennovation 3.0 at Chandigarh University - 1st Position</span>
+                            </li>
+                            <li class="p-4 rounded-md achievement-item">
+                                <i class="fas fa-trophy mr-3 ocean-blue"></i>
+                                <span class="slate font-semibold">BFIG VIBGYOR Ideatank - 1st Position</span>
+                            </li>
+                            <li class="p-4 rounded-md achievement-item">
+                                <i class="fas fa-trophy mr-3 ocean-blue"></i>
+                                <span class="slate font-semibold">COER Manthan '25 - 1st Position</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="marquee h-80 rounded-lg overflow-hidden">
+                        <div class="marquee-content">
+                            <img src="assets/achievements/1.jpg" alt="Achievement" class="inline-block h-80 w-auto rounded-lg mx-4 shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/300x400/112240/64ffda?text=Award+1';">
+                            <img src="assets/achievements/2.jpg" alt="Achievement" class="inline-block h-80 w-auto rounded-lg mx-4 shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/300x400/0a192f/64ffda?text=Award+2';">
+                            <img src="assets/achievements/3.jpg" alt="Achievement" class="inline-block h-80 w-auto rounded-lg mx-4 shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/300x400/112240/64ffda?text=Award+3';">
+                            <img src="assets/achievements/1.jpg" alt="Achievement" class="inline-block h-80 w-auto rounded-lg mx-4 shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/300x400/0a192f/64ffda?text=Award+1';">
+                            <img src="assets/achievements/2.jpg" alt="Achievement" class="inline-block h-80 w-auto rounded-lg mx-4 shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/300x400/112240/64ffda?text=Award+2';">
+                            <img src="assets/achievements/3.jpg" alt="Achievement" class="inline-block h-80 w-auto rounded-lg mx-4 shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/300x400/0a192f/64ffda?text=Award+3';">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Me -->
+            <section id="contact" class="my-24 text-center scroll-mt-20">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-2">
+                    <span class="ocean-blue font-mono text-2xl">05.</span> Get In Touch
+                </h2>
+                 <div class="w-24 h-1 ocean-blue-bg mb-8 mx-auto"></div>
+                <p class="max-w-xl mx-auto light-slate mb-8">
+                    I'm always open to discussing new projects, creative ideas, or opportunities to be part of an ambitious vision. Feel free to reach out.
+                </p>
+                <div class="flex justify-center space-x-8 text-3xl">
+                    <a href="https://www.linkedin.com/in/vansh-ahuja-8b5673259" target="_blank" class="light-slate hover:ocean-blue transition duration-300 transform hover:-translate-y-1">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="mailto:ahujavansh076@gmail.com" class="light-slate hover:ocean-blue transition duration-300 transform hover:-translate-y-1">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                    <a href="https://www.instagram.com/vastrious_aura?igsh=MTAzOHQyMTI0dHYxbg==" target="_blank" class="light-slate hover:ocean-blue transition duration-300 transform hover:-translate-y-1">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </section>
+        </main>
+
+        <footer class="text-center py-6 border-t border-gray-800">
+            <p class="light-slate text-sm">Designed & Built by Vansh Ahuja</p>
+        </footer>
+    </div>
+
+    <!-- Designer Mode 3D Canvas -->
+    <div id="designer-canvas-container" class="hidden"></div>
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Mobile menu functionality
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const closeMenuButton = document.getElementById('close-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.remove('translate-x-full');
+        });
+
+        closeMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.add('translate-x-full');
+        });
+
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('translate-x-full');
+            });
+        });
+
+        // Mode toggle functionality
+        const modeToggle = document.getElementById('mode-toggle');
+        const mobileModeToggle = document.getElementById('mobile-mode-toggle');
+        const developerContent = document.getElementById('developer-content');
+        const designerCanvasContainer = document.getElementById('designer-canvas-container');
+        
+        const devText = document.getElementById('dev-text');
+        const designText = document.getElementById('design-text');
+        const mobileDevText = document.getElementById('mobile-dev-text');
+        const mobileDesignText = document.getElementById('mobile-design-text');
+
+        let threeJsScene = null;
+        let animationFrameId = null;
+
+        function updateToggleText(isChecked) {
+             if (isChecked) {
+                devText.classList.remove('active-mode');
+                designText.classList.add('active-mode');
+                mobileDevText.classList.remove('active-mode');
+                mobileDesignText.classList.add('active-mode');
+            } else {
+                devText.classList.add('active-mode');
+                designText.classList.remove('active-mode');
+                mobileDevText.classList.add('active-mode');
+                mobileDesignText.classList.remove('active-mode');
+            }
+        }
+        
+        function handleModeChange(event) {
+            const isChecked = event.target.checked;
+            if (isChecked) {
+                // Switch to Designer Mode
+                developerContent.classList.add('hidden');
+                designerCanvasContainer.classList.remove('hidden');
+                if (!threeJsScene) {
+                    initThreeJs();
+                }
+                animate();
+            } else {
+                // Switch to Developer Mode
+                developerContent.classList.remove('hidden');
+                designerCanvasContainer.classList.add('hidden');
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                }
+            }
+            // Sync both toggles
+            modeToggle.checked = isChecked;
+            mobileModeToggle.checked = isChecked;
+            updateToggleText(isChecked);
+        }
+
+        modeToggle.addEventListener('change', handleModeChange);
+        mobileModeToggle.addEventListener('change', handleModeChange);
+        
+        // Initial text style setup
+        updateToggleText(modeToggle.checked);
+
+        // --- Three.js Designer Mode Code ---
+        function initThreeJs() {
+            const container = designerCanvasContainer;
+            
+            // Scene
+            const scene = new THREE.Scene();
+            
+            // Camera
+            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Renderer
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            const pointLight = new THREE.PointLight(0x64ffda, 1, 100);
+            pointLight.position.set(5, 5, 5);
+            scene.add(pointLight);
+
+            // Object
+            const geometry = new THREE.IcosahedronGeometry(1.5, 0);
+            const material = new THREE.MeshStandardMaterial({ color: 0x64ffda, wireframe: true });
+            const shape = new THREE.Mesh(geometry, material);
+            scene.add(shape);
+            
+            // Mouse interaction variables
+            let isMouseDown = false;
+            let previousMousePosition = { x: 0, y: 0 };
+
+            function onMouseDown(event) {
+                isMouseDown = true;
+            }
+
+            function onMouseUp(event) {
+                isMouseDown = false;
+            }
+
+            function onMouseMove(event) {
+                if (!isMouseDown) return;
+                
+                const deltaMove = {
+                    x: event.offsetX - previousMousePosition.x,
+                    y: event.offsetY - previousMousePosition.y
+                };
+
+                shape.rotation.y += deltaMove.x * 0.005;
+                shape.rotation.x += deltaMove.y * 0.005;
+                
+                previousMousePosition = { x: event.offsetX, y: event.offsetY };
+            }
+
+            container.addEventListener('mousedown', onMouseDown);
+            container.addEventListener('mouseup', onMouseUp);
+            container.addEventListener('mousemove', onMouseMove);
+
+
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+
+            threeJsScene = { scene, camera, renderer, shape };
+        }
+
+        function animate() {
+            animationFrameId = requestAnimationFrame(animate);
+            if (threeJsScene) {
+                const { scene, camera, renderer, shape } = threeJsScene;
+                shape.rotation.x += 0.001;
+                shape.rotation.y += 0.001;
+                renderer.render(scene, camera);
+            }
+        }
+
+    </script>
+</body>
+</html>
+
